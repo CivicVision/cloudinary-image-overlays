@@ -1,0 +1,28 @@
+%html
+  %head
+    %link(href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet")
+  %body
+    .container
+      %div(class="w-1/3")
+        %form#images
+          %input(type="text" name="image-1")
+          %input(type="text" name="image-2")
+          %input(type="text" name="image-3")
+          %input(type="text" name="image-4")
+          %button#check Check
+      %div(class="w-2/3")
+        %img#image( src="")
+        %p#url
+
+  :javascript
+    var url = "https://res.cloudinary.com/civicvision/image/upload/";
+    var params = new URL(location.href).searchParams;
+    var image1 = params.get('image-1');
+    var image2 = params.get('image-2');
+    var image3 = params.get('image-3');
+    var image4 = params.get('image-4');
+    var src = url+"c_fill,h_600,w_800/l_"+image1+",c_fill,h_600,w_800,x_800/c_fill,h_600,l_"+image2+",w_800,x_-400,y_600/c_fill,f_png,h_600,l_"+image3+",w_800,x_400,y_300/"+image4;
+    document.getElementById('image').src = src;
+    document.getElementById('url').innerHTML = src;
+
+    "http://res.cloudinary.com/civicvision/image/upload/c_fill,h_600,w_800/c_fill,h_600,l_cincinatti_heroin_incidents,w_800,x_800/c_fill,h_600,l_civil_forfeiture_sc,w_800,x_-400,y_600/c_fill,f_png,h_600,l_shops_england,w_800,x_400,y_300/sample.jpg"
