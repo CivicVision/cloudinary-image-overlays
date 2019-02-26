@@ -2,27 +2,59 @@
   %head
     %link(href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet")
   %body
-    .container
-      %div(class="w-1/3")
-        %form#images
-          %input(type="text" name="image-1")
-          %input(type="text" name="image-2")
-          %input(type="text" name="image-3")
-          %input(type="text" name="image-4")
-          %button#check Check
-      %div(class="w-2/3")
-        %img#image( src="")
-        %p#url
+    .container.m-8
+      .mb-4
+        %h1 Cloudinary Image Overlay
+        %p Using four images and positoning them in new image
+      .flex
+        %div(class="w-1/3 p-2")
+          %form#images.flex.flex-col
+            %label(for="id") Cloudinary Id
+            %input.bg-grey-light.mb-4.p-4.rounded(type="text" name="id")
+            %label(for="folder") Folder
+            %input.bg-grey-light.mb-4.p-4.rounded(type="text" name="folder")
+            %label(for="image-4") Image Top Left
+            %input.bg-grey-light.mb-4.p-4.rounded(type="text" name="image-4")
+            %label(for="image-1") Image Top Right
+            %input.bg-grey-light.mb-4.p-4.rounded(type="text" name="image-1")
+            %label(for="image-2") Image Bottom Left
+            %input.bg-grey-light.mb-4.p-4.rounded(type="text" name="image-2")
+            %label(for="image-3") Image Bottom Right
+            %input.bg-grey-light.mb-4.p-4.rounded(type="text" name="image-3")
+            %button#check.bg-blue.rounded.p-4.my-4 Check
+        %div(class="w-2/3")
+          %img#image.mb-4( src="")
+          %p.mb-2 Url for the created image above:
+          %p.p-4.bg-grey-lighter.break-words#url
 
   :javascript
-    var url = "https://res.cloudinary.com/civicvision/image/upload/";
+    var imageCreation = function(imageName, folder, position) {
+      var imageSrc = "c_fill,h_600,w_800,"+position+",l_";
+      if(folder && folder !== "") {
+        return imageSrc+folder+":"+imageName;
+      }
+      return imageSrc+imageName;
+    }
     var params = new URL(location.href).searchParams;
+    var id = params.get('id');
+    var folder = params.get('folder');
     var image1 = params.get('image-1');
     var image2 = params.get('image-2');
     var image3 = params.get('image-3');
     var image4 = params.get('image-4');
-    var src = url+"c_fill,h_600,w_800/l_"+image1+",c_fill,h_600,w_800,x_800/c_fill,h_600,l_"+image2+",w_800,x_-400,y_600/c_fill,f_png,h_600,l_"+image3+",w_800,x_400,y_300/"+image4;
+    if(!image1) {
+       id = "demo";
+       image1 = "nice_couple";
+       image2 = image1;
+       image3 = "coffee_cup";
+       image4 = image3;
+    }
+    var url = "https://res.cloudinary.com/"+id+"/image/upload/";
+    var src = url+"c_fill,h_600,w_800/"+imageCreation(image1, folder,"x_800")+"/"+imageCreation(image2, folder, "x_-400,y_600")+"/"+imageCreation(image3, folder, "x_400,y_300")+"/";
+    if(folder && folder !== "") {
+      src+= folder+"/"+image4;
+    } else {
+      src+= image4;
+    }
     document.getElementById('image').src = src;
     document.getElementById('url').innerHTML = src;
-
-    "http://res.cloudinary.com/civicvision/image/upload/c_fill,h_600,w_800/c_fill,h_600,l_cincinatti_heroin_incidents,w_800,x_800/c_fill,h_600,l_civil_forfeiture_sc,w_800,x_-400,y_600/c_fill,f_png,h_600,l_shops_england,w_800,x_400,y_300/sample.jpg"
